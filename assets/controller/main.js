@@ -168,6 +168,8 @@ getElement("#addPerson").onclick = () => {
     getElement("#btnUpdate").style.display = "none";
     getElement("#btnSaveModal").style.display = "inline-block";
     getElement('#inputSelect').style.display = "inline-block";
+    
+    getElement('#inputSelect').disabled = false;
 };
 getElement("#inputSelect").onchange = () => {
     const valOption = getElement("#inputSelect").value
