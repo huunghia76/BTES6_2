@@ -22,8 +22,8 @@ const lengthValue = (id, idThongbao, min, messErr) => {
         return true
     }
 }
-const patternTest = (idTest, idThongbao, pattern, messErr) => {
-    if (pattern.test(getElement(idTest).value)) {
+const patternTest = (validId, idThongbao, pattern, messErr) => {
+    if (pattern.test(getElement(validId).value)) {
         getElement(idThongbao).style.display = 'none'
         return true
     } else {
@@ -32,7 +32,7 @@ const patternTest = (idTest, idThongbao, pattern, messErr) => {
         return false
     }
 }
-const idTest = () => {
+const validId = () => {
     let idLenght = lengthValue('#inputId', '.thongbaoId', 0, 'Vui lòng nhập mã người dùng')
     if (idLenght) {
         let valueTest = getElement('#inputId').value
@@ -52,14 +52,14 @@ const idTest = () => {
         }
     } else return false
 }
-const nameTest = () => {
+const validName = () => {
     let nameLenght = lengthValue('#inputName', '.thongbaoName', 0, 'Không được bỏ trống')
     if (nameLenght) {
         let namePatternTest = patternTest('#inputName', '.thongbaoName', namePattern, 'Tên chỉ bao gồm các kí tự chữ cái')
         if (namePatternTest) { return true } else return false
     } else return false
 }
-const emailTest = function () {
+const validEmail = function () {
     let emailLenght = lengthValue('#inputEmail', '.thongbaoEmail', 0, 'Không được bỏ trống')
     if (emailLenght) {
         let emailPatternTest = patternTest('#inputEmail', '.thongbaoEmail', emailPattern, 'Email không đúng định dạng')
@@ -68,7 +68,7 @@ const emailTest = function () {
         } else return false
     } else return false
 }
-const adressTest = function () {
+const validAddress = function () {
     let adressLenght = lengthValue('#inputAddress', '.thongbaoAddress', 0, 'Không được bỏ trống')
     if (adressLenght) {
         let adressPatternTest = patternTest('#inputAddress', '.thongbaoAddress', addressPattern, 'Địa chỉ chỉ bao gồm chữ và số')
@@ -77,8 +77,8 @@ const adressTest = function () {
         } else return false
     } else return false
 }
-const diemTest = function (idTest, idThongbao, messErr) {
-    let diem = getElement(idTest).value
+const validDiem = function (validId, idThongbao, messErr) {
+    let diem = getElement(validId).value
     if (diem === '') {
         getElement(idThongbao).style.display = 'block'
         getElement(idThongbao).innerHTML = 'Vui lòng nhập điểm'
@@ -327,11 +327,11 @@ function renderListPerson(arr = JSON.parse(localStorage.getItem('QLHV')) )  {
 
 getElement("#btnSaveModal").onclick = () => {
     let a = getElement('#inputSelect').value
-    if (idTest() && adressTest() && nameTest() && emailTest()) {
+    if (validId() && validAddress() && validName() && validEmail()) {
         if (a === 'student') {
-            if (diemTest('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
-                diemTest('#inputLy', '.thongbaoLy', 'Điểm lý không hợp lệ (0- 10)') &&
-                diemTest('#inputHoa', '.thongbaoHoa', 'Điểm hóa không hợp lệ (0- 10)')) {
+            if (validDiem('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
+                validDiem('#inputLy', '.thongbaoLy', 'Điểm lý không hợp lệ (0- 10)') &&
+                validDiem('#inputHoa', '.thongbaoHoa', 'Điểm hóa không hợp lệ (0- 10)')) {
                 let sinhVien = getValueStudent();
                 arrPerson.addPerson(sinhVien); // add thêm Sinh viên
             }
@@ -367,13 +367,13 @@ getElement("#btnUpdate").onclick = function () {
     let parseData = JSON.parse(arrSP)
     let i = getElement('#inputId').value
 
-    if (adressTest() && nameTest() && emailTest()) {
+    if (validAddress() && validName() && validEmail()) {
         parseData.forEach((data, index) => {
             if (data.id === i) {
                 if (data.type === 'student') {
-                    if (diemTest('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
-                        diemTest('#inputLy', '.thongbaoLy', 'Điểm lý không hợp lệ (0- 10)') &&
-                        diemTest('#inputHoa', '.thongbaoHoa', 'Điểm hóa không hợp lệ (0- 10)')) {
+                    if (validDiem('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
+                        validDiem('#inputLy', '.thongbaoLy', 'Điểm lý không hợp lệ (0- 10)') &&
+                        validDiem('#inputHoa', '.thongbaoHoa', 'Điểm hóa không hợp lệ (0- 10)')) {
                         // Lấy lại thông tin sinh viên sau khi chỉnh sửa xong
                         var student = getValueStudent();
                         arrPerson.updatePerson(student);
