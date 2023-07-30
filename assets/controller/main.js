@@ -2,6 +2,7 @@ import Student from "../model/Student.js";
 import Employee from '../model/Employee.js';
 import Customer from '../model/Customer.js';
 let arrPerson = new ListPerson();
+arrPerson.init()
 // localStorage.clear()
 
 const getElement = (selector) => {
@@ -34,7 +35,6 @@ const patternTest = (idTest, idThongbao, pattern, messErr) => {
 }
 const idTest = () => {
     let idLenght = lengthValue('#inputId', '.thongbaoId', 0, 'Vui lòng nhập mã người dùng')
-    // console.log(idLenght);
     if (idLenght) {
         let valueTest = getElement('#inputId').value
         let trung = false
@@ -55,7 +55,6 @@ const idTest = () => {
 }
 const nameTest = () => {
     let nameLenght = lengthValue('#inputName', '.thongbaoName', 0, 'Không được bỏ trống')
-    console.log("nameLenght: ", nameLenght);
     if (nameLenght) {
         let namePatternTest = patternTest('#inputName', '.thongbaoName', namePattern, 'Tên chỉ bao gồm các kí tự chữ cái')
         if (namePatternTest) { return true } else return false
@@ -248,7 +247,6 @@ const getValueStudent = () => {
     });
     // tạo đối tượng món ăn từ class student
     const { inputId, inputName, inputAddress, inputEmail, inputToan, inputLy, inputHoa, inputSelect } = student;
-    console.log("student: ", student);
 
     return new Student(
         inputId, inputName, inputAddress, inputEmail, inputToan, inputLy, inputHoa, inputSelect
@@ -282,62 +280,18 @@ const getValueCustomer = () => {
     );
 };
 
-function setLocalStorage() {
-    let data = JSON.stringify(arrPerson.arrPerson);
-    console.log("data: ", data);
-    localStorage.setItem("QLHV", data);
-}
 // get danh sách sinh viên từ localStorage
 function getLocalStorage() {
-    let data = localStorage.getItem("QLHV");
-    if (data) {
-
-        let parseData = JSON.parse(data);
-        console.log("parseData: ", parseData);
-        let arr = [];
-        parseData.forEach((value) => {
-            console.log(value.type);
-            if (value.type === "student") {
-                const { id, name, address, email, inputToan, inputLy, inputHoa } = value;
-                const student = new Student(
-                    id,
-                    name,
-                    address,
-                    email,
-                    inputToan,
-                    inputLy,
-                    inputHoa,
-                    'student'
-                );
-                arr.push(student);
-            } else if (value.type === "customer") {
-                const { id, name, address, email, inputCompanyName, inputTriGiaHD, inputRate, } = value;
-                const customer = new Customer(id, name, address, email, inputCompanyName, inputTriGiaHD, inputRate,);
-                arr.push(customer);
-            } else if (value.type === "employee") {
-                const { id, name, address, email, inputDayWork, inputSalary } = value;
-                console.log("id, name, address, email, inputDayWork, inputSalary: ", id, name, address, email, inputDayWork, inputSalary);
-                const employee = new Employee(
-                    id,
-                    name,
-                    address,
-                    email,
-                    inputDayWork,
-                    inputSalary,
-                    'employee'
-                );
-                arr.push(employee);
-            }
-        });
-        arrPerson.arrPerson = arr;
-
-    }
+    return arrPerson.arrPerson;
 }
 
 function renderListPerson(arr = localStorage.getItem('QLHV'))  {
     let contenthtml = "";
     let parseData = JSON.parse(arr)
 
+    if (!parseData) {
+        return
+    }
     parseData.forEach((data) => {
         contenthtml += `
         <tr>
@@ -363,7 +317,6 @@ function renderListPerson(arr = localStorage.getItem('QLHV'))  {
 
 getElement("#btnSaveModal").onclick = () => {
     let a = getElement('#inputSelect').value
-    console.log();
     if (idTest() && adressTest() && nameTest() && emailTest()) {
         if (a === 'student') {
             if (diemTest('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
@@ -371,22 +324,18 @@ getElement("#btnSaveModal").onclick = () => {
                 diemTest('#inputHoa', '.thongbaoHoa', 'Điểm hóa không hợp lệ (0- 10)')) {
                 let sinhVien = getValueStudent();
                 arrPerson.addPerson(sinhVien); // add thêm Sinh viên
-                // setLocalStorage();
             }
 
         } else if (a === 'employee') {
             if (DayWorkTest() && salaryTest()) {
                 let emp = getValueEmployee();
                 arrPerson.addPerson(emp); // add thêm Sinh viên
-                // setLocalStorage();
             }
 
         } else if (a === 'customer') {
             if (companyTest() && hoaDonTest()) {
                 let cus = getValueCustomer();
-                console.log("cus: ", cus);
                 arrPerson.addPerson(cus); // add thêm Sinh viên
-                // setLocalStorage();
             }
 
         } else {
@@ -394,14 +343,12 @@ getElement("#btnSaveModal").onclick = () => {
         }
 
     }
-    setLocalStorage();
     renderListPerson();
 };
 
 
 window.deletePerson = (person) => {
     arrPerson.deletePerson(person);
-    setLocalStorage();
     renderListPerson();
 };
 // Cập nhật lại sinh viên
@@ -409,12 +356,10 @@ getElement("#btnUpdate").onclick = function () {
     let arrSP = localStorage.getItem('QLHV')
     let parseData = JSON.parse(arrSP)
     let i = getElement('#inputId').value
-    console.log("i: ", i);
 
     if (adressTest() && nameTest() && emailTest()) {
         parseData.forEach((data, index) => {
             if (data.id === i) {
-                console.log('fffffff');
                 if (data.type === 'student') {
                     if (diemTest('#inputToan', '.thongbaoToan', 'Điểm toán không hợp lệ (0- 10)') &&
                         diemTest('#inputLy', '.thongbaoLy', 'Điểm lý không hợp lệ (0- 10)') &&
@@ -422,8 +367,6 @@ getElement("#btnUpdate").onclick = function () {
                         // Lấy lại thông tin sinh viên sau khi chỉnh sửa xong
                         var student = getValueStudent();
                         arrPerson.updatePerson(student);
-                        // cập nhật data local
-                        setLocalStorage();
                     }
                 }
                 if (data.type === 'employee') {
@@ -431,8 +374,6 @@ getElement("#btnUpdate").onclick = function () {
                         // Lấy lại thông tin sinh viên sau khi chỉnh sửa xong
                         var emp = getValueEmployee();
                         arrPerson.updatePerson(emp);
-                        // cập nhật data local
-                        setLocalStorage();
                     }
                 }
                 if (data.type === 'customer') {
@@ -440,8 +381,6 @@ getElement("#btnUpdate").onclick = function () {
                         // Lấy lại thông tin sinh viên sau khi chỉnh sửa xong
                         var cus = getValueCustomer();
                         arrPerson.updatePerson(cus);
-                        // cập nhật data local
-                        setLocalStorage();
                     }
                 }
             }
@@ -462,8 +401,6 @@ window.editPerson = (id) => {
 
     var index = arrPerson.findPerson(id);
     var person = parseData[index];
-    console.log("person: ", person);
-    console.log(person.type);
     if (person.type === 'student') {
         getElement('#inputSelected').innerHTML = `
         <div class="row row-cols-1 row-cols-lg-3">
@@ -582,18 +519,12 @@ window.editPerson = (id) => {
 
 
 
-
-
 window.detailNd = (id) => {
 
     let arrSP = localStorage.getItem('QLHV')
     let parseData = JSON.parse(arrSP)
-    console.log("parseData: ", parseData);
     parseData.map(data => {
-        // console.log("data.id === id: ", data.id === id);
         if (data.id === id) {
-            console.log(data.type);
-            console.log(data);
             if (data.type === 'student') {
 
                 getElement('#detailContent').innerHTML = `
@@ -704,17 +635,17 @@ window.detailNd = (id) => {
 //Filter theo type
 const filterRole = function (type) {
     getLocalStorage()
+    console.log(arrPerson.arrPerson);
     let filter = arrPerson.arrPerson.filter((value) => {
-        console.log(value.type, type);
         return value.type === type
     })
+    console.log(arrPerson.arrPerson);
     return filter
 }
 getElement('#filterBtn').onchange = function () {
     let role = getElement('#filterBtn').value
     if (role !== '') {
         let filter = filterRole(role)
-        console.log("filter: ", filter);
         renderListPerson(filter)
     } else renderListPerson()
 }
@@ -728,8 +659,9 @@ const sortND = () => {
         let nameb = b.name.toUpperCase()
         return namea.localeCompare(nameb)
     })
-    console.log(arrSorted);
     renderListPerson(arrSorted)
+    console.log(arrPerson.arrPerson);
+
 }
 getElement('#sort').onchange = function () {
     if (getElement('#sort').value === 'name') {
