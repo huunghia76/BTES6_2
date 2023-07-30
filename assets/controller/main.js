@@ -294,14 +294,13 @@ function getLocalStorage() {
     return arrPerson.arrPerson;
 }
 
-function renderListPerson(arr = localStorage.getItem('QLHV'))  {
+function renderListPerson(arr = JSON.parse(localStorage.getItem('QLHV')) )  {
     let contenthtml = "";
-    let parseData = JSON.parse(arr)
 
-    if (!parseData) {
+    if (!arr) {
         return
     }
-    parseData.forEach((data) => {
+    arr.forEach((data) => {
         contenthtml += `
         <tr>
             <td class="text-center">${data.id}</td>
