@@ -4,7 +4,7 @@ function ListPerson() {
 
     this.addPerson = function addPerson(person) {
         this.arrPerson.push(person);
-        this.setLocalStorage('add')
+        this.setLocalStorage()
     }
     this.deletePerson = function deletePerson(r) {
         var index = -1;
@@ -19,7 +19,7 @@ function ListPerson() {
         if (index !== -1) {
             this.arrPerson.splice(index,1);
         }
-        this.setLocalStorage('delete')
+        this.setLocalStorage()
     }
     this.findPerson = function (idPerson) {
         // var index = -1;
@@ -38,7 +38,7 @@ function ListPerson() {
         if (index !== -1) {
             this.arrPerson[index] = person ;
         }
-        this.setLocalStorage('update')
+        this.setLocalStorage()
     }
 
     this.init = function () {

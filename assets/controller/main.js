@@ -179,19 +179,19 @@ getElement("#inputSelect").onchange = () => {
         <div class="row row-cols-1 row-cols-lg-3">
             <div class="mb-3">
                 <label for="inputToan" class="form-label">Toán</label>
-                <input type="text" class="form-control" id="inputToan"
+                <input type="number" class="form-control" id="inputToan"
                 name="inputToan" placeholder="Enter your Toan">
                 <p class="text-danger thongbaoToan"></p>
             </div>
             <div class="mb-3">
                 <label for="inputLy" class="form-label">Lý</label>
-                <input type="text" class="form-control" id="inputLy" name="inputLy"
+                <input type="number" class="form-control" id="inputLy" name="inputLy"
                     placeholder="Enter your Ly">
                     <p class="text-danger thongbaoLy"></p>
             </div>
             <div class="mb-3">
                 <label for="inputHoa" class="form-label">Hóa</label>
-                <input type="text" class="form-control" id="inputHoa" name="inputHoa"
+                <input type="number" class="form-control" id="inputHoa" name="inputHoa"
                     placeholder="Enter your Hoa">
                     <p class="text-danger thongbaoHoa"></p>
             </div>
@@ -203,13 +203,13 @@ getElement("#inputSelect").onchange = () => {
         <div class="row row-cols-1 row-cols-lg-2">
             <div class="mb-3">
                 <label for="inputDayWork" class="form-label">Số ngày làm việc</label>
-                <input type="text" class="form-control" id="inputDayWork" name="inputDayWork"
+                <input type="number" class="form-control" id="inputDayWork" name="inputDayWork"
                     placeholder="Enter your Day Work">
                     <p class="text-danger thongbaoDayWork"></p>
             </div>
             <div class="mb-3">
                 <label for="inputSalary" class="form-label">Lương theo ngày</label>
-                <input type="text" class="form-control" id="inputSalary" name="inputSalary"
+                <input type="number" class="form-control" id="inputSalary" name="inputSalary"
                     placeholder="Enter your Ly">
                     <p class="text-danger thongbaoSalary"></p>
             </div>
@@ -294,14 +294,14 @@ function getLocalStorage() {
     return arrPerson.arrPerson;
 }
 
-function renderListPerson(arr = arrPerson.arrPerson)  {
+function renderListPerson(arr = localStorage.getItem('QLHV'))  {
     let contenthtml = "";
-    // let parseData = JSON.parse(arr)
+    let parseData = JSON.parse(arr)
 
-    if (!arr) {
+    if (!parseData) {
         return
     }
-    arr.forEach((data) => {
+    parseData.forEach((data) => {
         contenthtml += `
         <tr>
             <td class="text-center">${data.id}</td>
@@ -406,30 +406,32 @@ window.editPerson = (id) => {
     getElement("#inputId").disabled = true;
     getElement("#btnUpdate").style.display = "inline-block";
     getElement("#btnSaveModal").style.display = "none";
-    getElement('#inputSelect').style.display = 'none'
+    getElement('#inputSelect').disabled = true;
 
     var index = arrPerson.findPerson(id);
     var person = parseData[index];
     if (person.type === 'student') {
+        getElement('#inputSelect').value = 'student'
+
         getElement('#inputSelected').innerHTML = `
         <div class="row row-cols-1 row-cols-lg-3">
             <div class="mb-3">
                 <label for="inputToan" class="form-label">Toán</label>
-                <input type="text" class="form-control" id="inputToan"
+                <input type="number" class="form-control" id="inputToan"
                 name="inputToan" placeholder="Enter your Toan">
                 <p class="text-danger thongbaoToan"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputLy" class="form-label">Lý</label>
-                <input type="text" class="form-control" id="inputLy" name="inputLy"
+                <input type="number" class="form-control" id="inputLy" name="inputLy"
                     placeholder="Enter your Ly">
                     <p class="text-danger thongbaoLy"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputHoa" class="form-label">Hóa</label>
-                <input type="text" class="form-control" id="inputHoa" name="inputHoa"
+                <input type="number" class="form-control" id="inputHoa" name="inputHoa"
                     placeholder="Enter your Hoa">
                     <p class="text-danger thongbaoHoa"></p>
             </div>
@@ -451,18 +453,19 @@ window.editPerson = (id) => {
 
     }
     if (person.type === 'employee') {
+        getElement('#inputSelect').value = 'employee'
         getElement('#inputSelected').innerHTML = `
         <div class="row row-cols-1 row-cols-lg-2">
             <div class="mb-3">
                 <label for="inputDayWork" class="form-label">Số ngày làm việc</label>
-                <input type="text" class="form-control" id="inputDayWork" name="inputDayWork"
+                <input type="number" class="form-control" id="inputDayWork" name="inputDayWork"
                     placeholder="Enter your Day Work">
                     <p class="text-danger thongbaoDayWork"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputSalary" class="form-label">Lương theo ngày</label>
-                <input type="text" class="form-control" id="inputSalary" name="inputSalary"
+                <input type="number" class="form-control" id="inputSalary" name="inputSalary"
                     placeholder="Enter your salary">
                     <p class="text-danger thongbaoSalary"></p>
 
@@ -484,6 +487,7 @@ window.editPerson = (id) => {
 
     }
     if (person.type === 'customer') {
+        getElement('#inputSelect').value = 'customer'
         getElement('#inputSelected').innerHTML = `
         <div class="row ">
             <div class="col mb-3">
@@ -533,6 +537,8 @@ window.detailNd = (id) => {
     let arrSP = localStorage.getItem('QLHV')
     let parseData = JSON.parse(arrSP)
     parseData.map(data => {
+        // console.log(data.id , id);
+        // console.log(data.type);
         if (data.id === id) {
             if (data.type === 'student') {
 
@@ -643,10 +649,9 @@ window.detailNd = (id) => {
 }
 //Filter theo type
 const filterRole = function (type) {
-    // getLocalStorage()
+    getLocalStorage()
     console.log(arrPerson.arrPerson);
     let filter = arrPerson.arrPerson.filter((value) => {
-        console.log(value.type, type);
         return value.type === type
     })
     console.log(arrPerson.arrPerson);
@@ -662,7 +667,7 @@ getElement('#filterBtn').onchange = function () {
 
 //Sort theo tên
 const sortND = () => {
-    // getLocalStorage()
+    getLocalStorage()
     console.log(arrPerson.arrPerson);
     let arrSorted = arrPerson.arrPerson.sort((a, b) => {
         let namea = a.name.toUpperCase()
