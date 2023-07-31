@@ -7,6 +7,7 @@ arrPerson.init()
 const getElement = (selector) => {
     return document.querySelector(selector);
 };
+
 const namePattern = /^[\p{L}\s']+$/u
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const addressPattern = /^[\p{L}\d\s.,-]+$/u
@@ -23,16 +24,18 @@ const lengthValue = (id, idThongbao, min, messErr) => {
     }
 }
 const patternTest = (validId, idThongbao, pattern, messErr) => {
+    // console.log( getElement(idThongbao));
     if (pattern.test(getElement(validId).value)) {
         getElement(idThongbao).style.display = 'none'
         return true
     } else {
         getElement(idThongbao).style.display = 'block'
+        //chỗ này nè 
         getElement(idThongbao).innerHTML = messErr
         return false
     }
 }
-const validId = () => {
+window.validId = () => {
     let idLenght = lengthValue('#inputId', '.thongbaoId', 0, 'Vui lòng nhập mã người dùng')
     if (idLenght) {
         let valueTest = getElement('#inputId').value
@@ -52,14 +55,14 @@ const validId = () => {
         }
     } else return false
 }
-const validName = () => {
+window.validName = () => {
     let nameLenght = lengthValue('#inputName', '.thongbaoName', 0, 'Không được bỏ trống')
     if (nameLenght) {
         let namePatternTest = patternTest('#inputName', '.thongbaoName', namePattern, 'Tên chỉ bao gồm các kí tự chữ cái')
         if (namePatternTest) { return true } else return false
     } else return false
 }
-const validEmail = function () {
+window.validEmail = function () {
     let emailLenght = lengthValue('#inputEmail', '.thongbaoEmail', 0, 'Không được bỏ trống')
     if (emailLenght) {
         let emailPatternTest = patternTest('#inputEmail', '.thongbaoEmail', emailPattern, 'Email không đúng định dạng')
@@ -68,7 +71,7 @@ const validEmail = function () {
         } else return false
     } else return false
 }
-const validAddress = function () {
+window.validAddress = function () {
     let adressLenght = lengthValue('#inputAddress', '.thongbaoAddress', 0, 'Không được bỏ trống')
     if (adressLenght) {
         let adressPatternTest = patternTest('#inputAddress', '.thongbaoAddress', addressPattern, 'Địa chỉ chỉ bao gồm chữ và số')
@@ -77,7 +80,7 @@ const validAddress = function () {
         } else return false
     } else return false
 }
-const validDiem = function (validId, idThongbao, messErr) {
+window.validDiem = function (validId, idThongbao, messErr) {
     let diem = getElement(validId).value
     if (diem === '') {
         getElement(idThongbao).style.display = 'block'
@@ -95,7 +98,7 @@ const validDiem = function (validId, idThongbao, messErr) {
     }
 
 }
-const salaryTest = function () {
+window.salaryTest = function () {
     let inputSalary = getElement('#inputSalary').value
     if (inputSalary === '') {
         getElement('.thongbaoSalary').style.display = 'block'
@@ -111,7 +114,7 @@ const salaryTest = function () {
     }
 }
 
-const DayWorkTest = function () {
+window.DayWorkTest = function () {
     let inputDayWork = getElement('#inputDayWork').value
     if (inputDayWork === '') {
         getElement('.thongbaoDayWork').style.display = 'block'
@@ -126,7 +129,7 @@ const DayWorkTest = function () {
         return true
     }
 }
-const companyTest = () => {
+window.companyTest = () => {
     let companyLength = lengthValue('#inputCompanyName', '.thongbaoCtyName', 0, 'Tên công ty không được bỏ trống')
     if (companyLength) {
         let companyPatternTest = patternTest('#inputCompanyName', '.thongbaoCtyName', addressPattern, 'Tên công ty chỉ bao gồm chữ và số')
@@ -137,7 +140,7 @@ const companyTest = () => {
 
 }
 
-const hoaDonTest = function () {
+window.hoaDonTest = function () {
     let hoaDon = getElement('#inputTriGiaHD').value
     if (hoaDon === '') {
         getElement('.thongbaoHD').style.display = 'block'
@@ -152,10 +155,11 @@ const hoaDonTest = function () {
         return true
     }
 }
-const rateTest = () => {
+window.rateTest = () => {
     let rateLenght = lengthValue('#inputRate', '.thongbaoRate', 0, 'Rate không được bỏ trống')
     if (rateLenght) {
         let ratePatternTest = patternTest('#inputRate', '.thongbaoRate', addressPattern, 'Rate chỉ bao gồm chữ và số')
+        console.log(ratePatternTest);
         if (ratePatternTest) {
             return true
         } else return false
@@ -168,7 +172,12 @@ getElement("#addPerson").onclick = () => {
     getElement("#btnUpdate").style.display = "none";
     getElement("#btnSaveModal").style.display = "inline-block";
     getElement('#inputSelect').style.display = "inline-block";
-    
+    getElement('#inputSelected').innerHTML = ''
+    let tbaoClass = document.querySelectorAll('.tbao')
+    tbaoClass.forEach(tbao => {
+        tbao.style.display = 'none'
+    });
+
     getElement('#inputSelect').disabled = false;
 };
 getElement("#inputSelect").onchange = () => {
@@ -183,19 +192,19 @@ getElement("#inputSelect").onchange = () => {
                 <label for="inputToan" class="form-label">Toán</label>
                 <input type="number" class="form-control" id="inputToan"
                 name="inputToan" placeholder="Enter your Toan">
-                <p class="text-danger thongbaoToan"></p>
+                <p class="text-danger tbao thongbaoToan"></p>
             </div>
             <div class="mb-3">
                 <label for="inputLy" class="form-label">Lý</label>
                 <input type="number" class="form-control" id="inputLy" name="inputLy"
                     placeholder="Enter your Ly">
-                    <p class="text-danger thongbaoLy"></p>
+                    <p class="text-danger tbao thongbaoLy"></p>
             </div>
             <div class="mb-3">
                 <label for="inputHoa" class="form-label">Hóa</label>
                 <input type="number" class="form-control" id="inputHoa" name="inputHoa"
                     placeholder="Enter your Hoa">
-                    <p class="text-danger thongbaoHoa"></p>
+                    <p class="text-danger tbao thongbaoHoa"></p>
             </div>
         </div>
         `
@@ -205,15 +214,15 @@ getElement("#inputSelect").onchange = () => {
         <div class="row row-cols-1 row-cols-lg-2">
             <div class="mb-3">
                 <label for="inputDayWork" class="form-label">Số ngày làm việc</label>
-                <input type="number" class="form-control" id="inputDayWork" name="inputDayWork"
+                <input onchange='DayWorkTest() type="number" class="form-control" id="inputDayWork" name="inputDayWork"
                     placeholder="Enter your Day Work">
-                    <p class="text-danger thongbaoDayWork"></p>
+                    <p class="text-danger tbao thongbaoDayWork"></p>
             </div>
             <div class="mb-3">
                 <label for="inputSalary" class="form-label">Lương theo ngày</label>
-                <input type="number" class="form-control" id="inputSalary" name="inputSalary"
+                <input onchange='salaryTest() type="number" class="form-control" id="inputSalary" name="inputSalary"
                     placeholder="Enter your Ly">
-                    <p class="text-danger thongbaoSalary"></p>
+                    <p class="text-danger tbao thongbaoSalary"></p>
             </div>
         </div>
         `
@@ -223,23 +232,23 @@ getElement("#inputSelect").onchange = () => {
         <div class="row ">
             <div class="col mb-3">
                 <label for="inputCompanyName" class="form-label">Tên công ty</label>
-                <input type="text" class="form-control" id="inputCompanyName" name="inputCompanyName"
+                <input onchange='companyTest()' type="text" class="form-control" id="inputCompanyName" name="inputCompanyName"
                     placeholder="Enter your Company Name">
-                    <p class="text-danger thongbaoCtyName"></p>
+                    <p class="text-danger tbao thongbaoCtyName"></p>
 
             </div>
             <div class="col mb-3">
                 <label for="inputTriGiaHD" class="form-label">Trị giá hóa đơn</label>
-                <input type="text" class="form-control" id="inputTriGiaHD" name="inputTriGiaHD"
+                <input onchange='hoaDonTest()' type="text" class="form-control" id="inputTriGiaHD" name="inputTriGiaHD"
                     placeholder="Enter your Trị giá hóa đơn">
-                    <p class="text-danger thongbaoHD"></p>
+                    <p class="text-danger tbao thongbaoHD"></p>
 
             </div>
             <div class="col mb-3">
                 <label for="inputRate" class="form-label">Rate</label>
-                <input type="text" class="form-control" id="inputRate" name="inputRate"
+                <input onchange='rateTest()' type="text" class="form-control" id="inputRate" name="inputRate"
                     placeholder="Enter your Rate">
-                    <p class="text-danger thongbaoRate"></p>
+                    <p class="text-danger tbao thongbaoRate"></p>
 
             </div>
         </div>
@@ -247,7 +256,10 @@ getElement("#inputSelect").onchange = () => {
     }
 
 }
-
+const handChangeInput = () => {
+    // console.log('aaaa');
+    // rateTest()
+}
 const getValueStudent = () => {
     let student = {};
     const elements = document.querySelectorAll("#personForm input , #personForm select");
@@ -296,7 +308,7 @@ function getLocalStorage() {
     return arrPerson.arrPerson;
 }
 
-function renderListPerson(arr = JSON.parse(localStorage.getItem('QLHV')) )  {
+function renderListPerson(arr = JSON.parse(localStorage.getItem('QLHV'))) {
     let contenthtml = "";
 
     if (!arr) {
@@ -343,7 +355,7 @@ getElement("#btnSaveModal").onclick = () => {
             }
 
         } else if (a === 'customer') {
-            if (companyTest() && hoaDonTest() && rateTest) {
+            if (companyTest() && hoaDonTest() && rateTest()) {
                 let cus = getValueCustomer();
                 arrPerson.addPerson(cus); // add thêm Sinh viên
             }
@@ -404,10 +416,15 @@ window.editPerson = (id) => {
     let arrSP = localStorage.getItem('QLHV')
     let parseData = JSON.parse(arrSP)
 
+    let tbaoClass = document.querySelectorAll('.tbao')
+    tbaoClass.forEach(tbao => {
+        tbao.style.display = 'none'
+    });
     getElement("#inputId").disabled = true;
     getElement("#btnUpdate").style.display = "inline-block";
     getElement("#btnSaveModal").style.display = "none";
     getElement('#inputSelect').disabled = true;
+    getElement('#inputSelect').style.display = 'none';
 
     var index = arrPerson.findPerson(id);
     var person = parseData[index];
@@ -420,21 +437,21 @@ window.editPerson = (id) => {
                 <label for="inputToan" class="form-label">Toán</label>
                 <input type="number" class="form-control" id="inputToan"
                 name="inputToan" placeholder="Enter your Toan">
-                <p class="text-danger thongbaoToan"></p>
+                <p class="text-danger tbao thongbaoToan"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputLy" class="form-label">Lý</label>
                 <input type="number" class="form-control" id="inputLy" name="inputLy"
                     placeholder="Enter your Ly">
-                    <p class="text-danger thongbaoLy"></p>
+                    <p class="text-danger tbao thongbaoLy"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputHoa" class="form-label">Hóa</label>
                 <input type="number" class="form-control" id="inputHoa" name="inputHoa"
                     placeholder="Enter your Hoa">
-                    <p class="text-danger thongbaoHoa"></p>
+                    <p class="text-danger tbao thongbaoHoa"></p>
             </div>
         </div>
         `;
@@ -461,14 +478,14 @@ window.editPerson = (id) => {
                 <label for="inputDayWork" class="form-label">Số ngày làm việc</label>
                 <input type="number" class="form-control" id="inputDayWork" name="inputDayWork"
                     placeholder="Enter your Day Work">
-                    <p class="text-danger thongbaoDayWork"></p>
+                    <p class="text-danger tbao thongbaoDayWork"></p>
 
             </div>
             <div class="mb-3">
                 <label for="inputSalary" class="form-label">Lương theo ngày</label>
                 <input type="number" class="form-control" id="inputSalary" name="inputSalary"
                     placeholder="Enter your salary">
-                    <p class="text-danger thongbaoSalary"></p>
+                    <p class="text-danger tbao thongbaoSalary"></p>
 
             </div>
         </div>
@@ -495,21 +512,21 @@ window.editPerson = (id) => {
                 <label for="inputCompanyName" class="form-label">Tên công ty</label>
                 <input type="text" class="form-control" id="inputCompanyName" name="inputCompanyName"
                     placeholder="Enter your Company Name">
-                    <p class="text-danger thongbaoCtyName"></p>
+                    <p class="text-danger tbao thongbaoCtyName"></p>
 
             </div>
             <div class="col mb-3">
                 <label for="inputTriGiaHD" class="form-label">Trị giá hóa đơn</label>
                 <input type="text" class="form-control" id="inputTriGiaHD" name="inputTriGiaHD"
                     placeholder="Enter your Trị giá hóa đơn">
-                    <p class="text-danger thongbaoHD"></p>
+                    <p class="text-danger tbao thongbaoHD"></p>
 
             </div>
             <div class="col mb-3">
                 <label for="inputRate" class="form-label">Rate</label>
                 <input type="text" class="form-control" id="inputRate" name="inputRate"
                     placeholder="Enter your Rate">
-                    <p class="text-danger thongbaoRate"></p>
+                    <p class="text-danger tbao thongbaoRate"></p>
 
             </div>
         </div>
