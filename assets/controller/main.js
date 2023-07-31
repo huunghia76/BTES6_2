@@ -336,7 +336,7 @@ function renderListPerson(arr = JSON.parse(localStorage.getItem('QLHV'))) {
     });
     getElement("#tbodyPerson").innerHTML = contenthtml;
 }
-
+  
 getElement("#btnSaveModal").onclick = () => {
     let a = getElement('#inputSelect').value
     if (validId() && validAddress() && validName() && validEmail()) {
